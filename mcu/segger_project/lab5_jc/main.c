@@ -1,3 +1,8 @@
+// main.h
+// Jared Carreno
+// jcarreno@hmc.edu
+// 10/4/2025
+
 #include "main.h"
 
 int32_t counter;
@@ -46,7 +51,7 @@ int main(void) {
     delay_millis(TIM2, 1000);
   }
 
-}
+} 
 
 void EXTI1_IRQHandler(void) {
   //if (EXTI->PR1 & (1 << gpioPinOffset(PIN_A))) {
