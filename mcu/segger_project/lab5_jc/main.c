@@ -60,22 +60,14 @@ void EXTI1_IRQHandler(void) {
 
   EXTI->PR1 |= (1 << gpioPinOffset(PIN_A));
 
-    if(digitalRead(PIN_A) && digitalRead(PIN_B)) {
-      counter--;
+    if(digitalRead(PIN_A) == digitalRead(PIN_B)) {
+      counter--;    // CW rising edge on B when A is high
+    }
+    
+    else {
+      counter++;    // CCW rising edge on B when A is low  
     }
 
-    if(digitalRead(PIN_A) && !digitalRead(PIN_B)) {
-      counter++;
-
-    }
-
-    if(!digitalRead(PIN_A) && digitalRead(PIN_B)) {
-      counter++;
-    }
-
-    if(!digitalRead(PIN_A) && !digitalRead(PIN_B)) {
-      counter--;
-    }
 }
 
 void EXTI2_IRQHandler(void) {
@@ -84,26 +76,19 @@ void EXTI2_IRQHandler(void) {
   //}
   EXTI->PR1 |= (1 << gpioPinOffset(PIN_B));
 
-    if(digitalRead(PIN_A) && digitalRead(PIN_B)) {
+    if(digitalRead(PIN_A) == digitalRead(PIN_B)) {
       counter++;    // CW rising edge on B when A is high
     }
     
-    if(!digitalRead(PIN_A) && digitalRead(PIN_B)) {
+    else {
       counter--;    // CCW rising edge on B when A is low  
     }
     
-    if(!digitalRead(PIN_A) && !digitalRead(PIN_B)) {
-      counter++;    // CW falling edge on B when A is low
-    }
-    
-    if(digitalRead(PIN_A) && !digitalRead(PIN_B)) {
-      counter--;    // CCW falling edge on B when A is high
-    }
 }
 
  void compute_velocity(void) { 
   double velocity = ((double)counter)/(4.0*PPR);
-  printf("%i \n", counter);
+  printf("counter: %i \n", counter);
   counter = 0;
   
   printf("The motor is spinning at %f rev/s \n", velocity);
