@@ -5,7 +5,7 @@
 
 #include "main.h"
 
-int32_t counter;
+volatile int32_t counter;
 
 
 int main(void) {
@@ -54,34 +54,33 @@ int main(void) {
 } 
 
 void EXTI1_IRQHandler(void) {
-  //if (EXTI->PR1 & (1 << gpioPinOffset(PIN_A))) {
-    
-  //}
+// Trigger Condition: rising/falling edge of A
 
   EXTI->PR1 |= (1 << gpioPinOffset(PIN_A));
+// clear the interrupt if rising/falling edges of A triggered interrupt
 
     if(digitalRead(PIN_A) == digitalRead(PIN_B)) {
-      counter--;    // CW rising edge on B when A is high
+      counter--;    // if A rises while B is high, moving CCW
     }
     
     else {
-      counter++;    // CCW rising edge on B when A is low  
+      counter++;    // if A rises while B is low, moving CW
     }
 
 }
 
-void EXTI2_IRQHandler(void) {
-  //if (EXTI->PR1 & (1 << gpioPinOffset(PIN_B))) {
-    
-  //}
-  EXTI->PR1 |= (1 << gpioPinOffset(PIN_B));
+void EXTI2_IRQHandler(void) { 
+// Trigger Condition: rising/falling edge of B
 
-    if(digitalRead(PIN_A) == digitalRead(PIN_B)) {
-      counter++;    // CW rising edge on B when A is high
+  EXTI->PR1 |= (1 << gpioPinOffset(PIN_B)); 
+// clear the interrupt if rising/falling edges of B triggered interrupt
+
+    if(digitalRead(PIN_A) == digitalRead(PIN_B)) { // if B rises while A is high, moving CW
+      counter++;
     }
     
     else {
-      counter--;    // CCW rising edge on B when A is low  
+      counter--;  // if B rises while A is low, moving CCW
     }
     
 }
